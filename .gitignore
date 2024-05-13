@@ -1,0 +1,5 @@
+node_modules
+
+src/api/venv
+src/api/.env
+
