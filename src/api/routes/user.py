@@ -38,12 +38,12 @@ def get_user(user_id: int) -> Response:
 @user_bp.route('/', methods=['POST'])
 def create_user() -> tuple[Response, int]:
     data = request.json
-    username = data['username']                                                                                 # type: ignore[index]
+    username = data['username']                                             # type: ignore[index]
     user = User.query.filter(User.username == username).first()
     if user is not None:
         return jsonify({'message': f'User with username {username} already exists', 'id': user.id}), 403
-    new_user = User(username=username, email=data['email'])                                                     # type: ignore[index]
-    new_user.set_password(data['password'])                                                                     # type: ignore[index]
+    new_user = User(username=username, email=data['email'])                 # type: ignore[index]
+    new_user.set_password(data['password'])                                 # type: ignore[index]
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'User created successfully'}), 201
