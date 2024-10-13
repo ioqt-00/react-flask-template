@@ -43,8 +43,6 @@ services:
     restart: always
     tty: true
     stdin_open: true
-    environment:
-      - NODE_OPTIONS=--openssl-legacy-provider
     labels:
       - "traefik.http.services.template-front.loadbalancer.server.port=3000"
       - "traefik.http.routers.template-front.rule=Host(`template.localhost`) && !PathPrefix(`/api`)"
