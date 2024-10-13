@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 
 async function signup(credentials) {
-    return fetch('/users', {
+    return fetch('api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

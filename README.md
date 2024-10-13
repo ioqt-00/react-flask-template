@@ -2,5 +2,7 @@
 
 yarn config set script-shell /bin/bash
 
-yarn start:api
-yarn start:client
+yarn start
+
+# For production
+docker-compose up -d --build

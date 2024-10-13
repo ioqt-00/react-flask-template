@@ -9,10 +9,10 @@ from routes.helpers import admin_required
 from routes.user import user_bp
 
 
-app.register_blueprint(user_bp, url_prefix='/users')
+app.register_blueprint(user_bp, url_prefix='/api/users')
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def create_token() -> tuple[Response, int]:
     data = request.json
     username = data["username"]                                         # type: ignore[index]
@@ -24,7 +24,7 @@ def create_token() -> tuple[Response, int]:
     return jsonify({"access_token": access_token}), 200
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/api/logout', methods=['POST'])
 def logout() -> tuple[Response, int]:
     response = jsonify({"message": "logout successful"})
     unset_jwt_cookies(response)
@@ -42,5 +42,5 @@ if __name__ == '__main__':
         from waitress import serve
         import logging
         logger = logging.getLogger('waitress')
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
         serve(app, host="0.0.0.0", port=5000)

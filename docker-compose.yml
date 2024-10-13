@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v3.1
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_DB=data
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+
+  api:
+    build: src/api
+    restart: always
+    depends_on: 
+      - db
+    environment:
+      - FLASK_ENV=${FLASK_ENV}
+      - FLASK_APP=app.py
+      - SQLALCHEMY_DATABASE_URI=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db/data
+    labels:
+      - "traefik.http.services.template-api.loadbalancer.server.port=5000"
+      - "traefik.http.routers.template-api.rule=Host(`template.localhost`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.template-api.entrypoints=web"
+
+  front:
+    build:
+      context: .
+      dockerfile: dockerfile.prod
+    restart: always
+    tty: true
+    stdin_open: true
+    environment:
+      - NODE_OPTIONS=--openssl-legacy-provider
+    labels:
+      - "traefik.http.services.template-front.loadbalancer.server.port=3000"
+      - "traefik.http.routers.template-front.rule=Host(`template.localhost`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.template-front.entrypoints=web"

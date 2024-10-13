@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { setToken } from '../helpers/login';
 
 async function loginUser(credentials) {
-    return fetch('/login', {
+    return fetch('api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

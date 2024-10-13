@@ -16,7 +16,7 @@ class App extends Component {
   handleSubmit = (e, history, searchInput) => {
     e.preventDefault();
     e.currentTarget.reset();
-    let url = `/search/${searchInput}`;
+    let url = `api/search/${searchInput}`;
     history.push(url);
   };
 
