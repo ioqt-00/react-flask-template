@@ -18,7 +18,7 @@ services:
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_DB=data
     ports:
-      - '5432:5432'
+      - '${DATABASE_PORT}:5432'
     volumes:
       - ./db_data:/var/lib/postgresql/data
 
@@ -30,11 +30,11 @@ services:
     environment:
       - FLASK_ENV=${FLASK_ENV}
       - FLASK_APP=app.py
-      - SQLALCHEMY_DATABASE_URI=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db/data
+      - SQLALCHEMY_DATABASE_URI=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:${DATABASE_PORT}/data
     labels:
-      - "traefik.http.services.template-api.loadbalancer.server.port=5000"
-      - "traefik.http.routers.template-api.rule=Host(`template.localhost`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.template-api.entrypoints=web"
+      - "traefik.http.services.api.loadbalancer.server.port=5000"
+      - "traefik.http.routers.api.rule=Host(`template.localhost`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api.entrypoints=web"
 
   front:
     build:
@@ -44,6 +44,6 @@ services:
     tty: true
     stdin_open: true
     labels:
-      - "traefik.http.services.template-front.loadbalancer.server.port=3000"
-      - "traefik.http.routers.template-front.rule=Host(`template.localhost`) && !PathPrefix(`/api`)"
-      - "traefik.http.routers.template-front.entrypoints=web"
+      - "traefik.http.services.front.loadbalancer.server.port=3000"
+      - "traefik.http.routers.front.rule=Host(`template.localhost`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.front.entrypoints=web"

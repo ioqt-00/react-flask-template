@@ -4,4 +4,4 @@ src/api/venv
 src/api/.env
 
 build/
-
+.env
